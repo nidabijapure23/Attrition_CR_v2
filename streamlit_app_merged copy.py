@@ -52,7 +52,7 @@ with st.sidebar:
 # Load model
 try:
     pipeline = joblib.load('CR_xgboost_model_old.pkl')
-    tenure_pipeline = joblib.load('tenure_model_old.pkl')
+    # tenure_pipeline = joblib.load('tenure_model_old.pkl')
 except Exception as e:
     st.error(f"Error loading model: {str(e)}")
     st.stop()
@@ -102,10 +102,10 @@ tenure_preprocessor = ColumnTransformer(transformers=[
     ('ord', ordinal_transformer, ordinal_features),
     ('nom', nominal_transformer, nominal_features)
 ])
-# tenure_pipeline = Pipeline(steps=[
-#     ('preprocessor', tenure_preprocessor),
-#     ('regressor', RandomForestRegressor(random_state=42))
-# ]) 
+ tenure_pipeline = Pipeline(steps=[
+     ('preprocessor', tenure_preprocessor),
+     ('regressor', RandomForestRegressor(random_state=42))
+ ]) 
 # Risk bucketing function
 def bucketize_risk(prob):
     if prob >= 0.9:
