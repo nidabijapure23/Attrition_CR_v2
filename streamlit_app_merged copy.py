@@ -102,10 +102,9 @@ tenure_preprocessor = ColumnTransformer(transformers=[
     ('ord', ordinal_transformer, ordinal_features),
     ('nom', nominal_transformer, nominal_features)
 ])
- tenure_pipeline = Pipeline(steps=[
-     ('preprocessor', tenure_preprocessor),
-     ('regressor', RandomForestRegressor(random_state=42))
- ]) 
+tenure_pipeline = Pipeline(steps=[('preprocessor', tenure_preprocessor),
+                                  ('regressor', RandomForestRegressor(random_state=42))
+                                 ]) 
 # Risk bucketing function
 def bucketize_risk(prob):
     if prob >= 0.9:
