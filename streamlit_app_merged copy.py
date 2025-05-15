@@ -96,15 +96,15 @@ preprocessor = ColumnTransformer(transformers=[
 
 
 # Tenure regressor pipeline
-tenure_numerical_features = [f for f in numerical_features if f != 'Tenure']
-tenure_preprocessor = ColumnTransformer(transformers=[
-    ('num', numerical_transformer, tenure_numerical_features),
-    ('ord', ordinal_transformer, ordinal_features),
-    ('nom', nominal_transformer, nominal_features)
-])
-tenure_pipeline = Pipeline(steps=[('preprocessor', tenure_preprocessor),
-                                  ('regressor', RandomForestRegressor(random_state=42))
-                                 ]) 
+# tenure_numerical_features = [f for f in numerical_features if f != 'Tenure']
+# tenure_preprocessor = ColumnTransformer(transformers=[
+#    ('num', numerical_transformer, tenure_numerical_features),
+#    ('ord', ordinal_transformer, ordinal_features),
+#    ('nom', nominal_transformer, nominal_features)
+# ])
+# tenure_pipeline = Pipeline(steps=[('preprocessor', tenure_preprocessor),
+#                                  ('regressor', RandomForestRegressor(random_state=42))
+#                                 ]) 
 # Risk bucketing function
 def bucketize_risk(prob):
     if prob >= 0.9:
@@ -165,8 +165,8 @@ def process_predictions(df):
     # if 'Tenure' not in df.columns:
     #     df['Predicted Tenure'] = tenure_pipeline.predict(X)
     # else:
-    X = X.drop('Tenure', axis=1)
-    df['Predicted Tenure'] = tenure_pipeline.predict(X)
+    # X = X.drop('Tenure', axis=1)
+    # df['Predicted Tenure'] = tenure_pipeline.predict(X)
     
     # Calculate SHAP values for feature importance
     try:
@@ -303,9 +303,8 @@ if uploaded_file:
                 # Calculate Actual Tenure
                 false_positives['Actual Tenure'] = false_positives.apply(calculate_tenure, axis=1)
                 # Calculate Variation
-                false_positives['Variation'] = false_positives['Predicted Tenure'] - false_positives['Actual Tenure']
-                display_cols = ['Employee ID', 'Attrition Prediction', 'Risk Level', 'Triggers', 
-                              'Actual Tenure', 'Predicted Tenure', 'Variation']
+                # false_positives['Variation'] = false_positives['Predicted Tenure'] - false_positives['Actual Tenure']
+                display_cols = ['Employee ID', 'Attrition Prediction', 'Risk Level', 'Triggers', 'Actual Tenure']
                 st.dataframe(false_positives[display_cols], use_container_width=True)
             else:
                 st.success("No active employees predicted as at risk!")
@@ -321,11 +320,11 @@ if uploaded_file:
             
             # Calculate Actual Tenure and Variation
             all_predictions['Actual Tenure'] = all_predictions.apply(calculate_tenure, axis=1)
-            all_predictions['Variation'] = all_predictions['Predicted Tenure'] - all_predictions['Actual Tenure']
+            # all_predictions['Variation'] = all_predictions['Predicted Tenure'] - all_predictions['Actual Tenure']
             
             # Select columns for output
             output_cols = ['SR.No.', 'Employee ID', 'Attrition Prediction', 'Risk Level', 'Attrition Probability', 
-                         'Triggers', 'Actual Tenure', 'Predicted Tenure', 'Variation', 'Actual Status']
+                         'Triggers', 'Actual Tenure','Actual Status']
             
             all_predictions[output_cols].to_csv('all_predictions.csv', index=False)
             with open('all_predictions.csv', 'rb') as f:
